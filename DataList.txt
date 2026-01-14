@@ -1,0 +1,80 @@
+
+====================================================
+            CLEANED DATA SUMMARY
+====================================================
+Sample Size (n): 200 
+Sample Mean: 33.955 
+Sample Variance: 46.098 
+95% CI for Mean: [ 33.014 , 34.896 ]
+
+Detected Defective Values:  
+Detected Outliers:  
+
+====================================================
+      METHOD OF MOMENTS (MM) PARAMETERS
+====================================================
+Normal Mean (MM): 33.955 
+Normal SD (MM): 6.7895 
+
+Exponential Rate (MM): 0.029451 
+
+Gamma Shape (MM): 25.0107 
+Gamma Scale (MM): 1.3576 
+
+====================================================
+      MAXIMUM LIKELIHOOD ESTIMATION (MLE)
+====================================================
+Normal Mean (MLE): 33.955 
+Normal SD (MLE): 6.7726 
+
+Exponential Rate (MLE): 0.029451 
+
+Gamma Shape (MLE): 24.0052 
+Gamma Scale (MLE): 1.4145 
+
+====================================================
+      STANDARD ERRORS & 95% CONFIDENCE INTERVALS
+====================================================
+Normal Mean SE: 0.47889 
+95% CI (Normal Mean): [ 33.0164 ,  34.8936 ]
+
+95% CI (Normal SD): [ 6.1689 ,  7.5082 ]
+
+Exponential Rate SE: 0.00208 
+95% CI (Exp Rate): [ 0.025369 ,  0.033532 ]
+
+Gamma Shape SE: 2.37523 
+95% CI (Gamma Shape): [ 19.3498 ,  28.6607 ]
+
+Gamma Scale SE: 0.13905 
+95% CI (Gamma Scale): [ 1.142 ,  1.687 ]
+
+====================================================
+            MONTE CARLO SIMULATION SUMMARY
+====================================================
+Normal Sim Means: 
+  100 reps: 33.9203  | Var: 0.224757 
+  1000 reps: 33.923  | Var: 0.238864 
+  10000 reps: 33.9606  | Var: 0.235527 
+
+Exponential Sim Means: 
+  100 reps: 34.0791  | Var: 4.165735 
+  1000 reps: 33.9194  | Var: 5.40821 
+  10000 reps: 33.9502  | Var: 5.865468 
+
+Gamma Sim Means: 
+  100 reps: 33.9354  | Var: 0.252812 
+  1000 reps: 33.9534  | Var: 0.232868 
+  10000 reps: 33.9552  | Var: 0.231633 
+
+====================================================
+              KS TEST RESULTS
+====================================================
+Normal KS Statistic: 0.0417  | p-value: 0.8783336 
+Exponential KS Statistic: 0.449  | p-value: 1.871001e-35 
+Gamma KS Statistic: 0.0416  | p-value: 0.8786682 
+
+====================================================
+              END OF ANALYSIS OUTPUT
+====================================================
+
