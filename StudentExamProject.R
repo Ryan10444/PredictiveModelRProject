@@ -183,3 +183,98 @@ se_gamma_scale
 ci_gamma_scale_lower
 ci_gamma_scale_upper
 
+### Monte Carlo Simulation
+
+# First, estimate Normal, Exponential, and Gamma parameters
+# Using simple formulas (Method of Moments)
+
+# Normal distribution parameters
+normal_mean <- xbar
+normal_sd <- std_dev
+
+# Exponential parameter (rate = 1/mean)
+exp_rate <- 1 / xbar
+
+# Gamma distribution parameters
+# Method of Moments:
+# shape = mean^2 / variance
+# scale = variance / mean
+gamma_shape <- (xbar^2) / var
+gamma_scale <- var / xbar
+
+# Function to run simulation and return means
+run_simulation <- function(dist_name, reps) {
+  sim_means <- numeric(reps) # empty vector for storing means
+  
+  for (i in 1:reps) {
+    if (dist_name == "normal") {
+      sim_data <- rnorm(n, mean = normal_mean, sd = normal_sd)
+    }
+    if (dist_name == "exponential") {
+      sim_data <- rexp(n, rate = exp_rate)
+    }
+    if (dist_name == "gamma") {
+      sim_data <- rgamma(n, shape = gamma_shape, scale = gamma_scale)
+    }
+    
+    sim_means[i] <- mean(sim_data)
+  }
+  
+  return(sim_means)
+}
+
+# Run simulations for 100, 1,000, and 10,000 repetitions
+normal_100 <- run_simulation("normal", 100)
+normal_1000 <- run_simulation("normal", 1000)
+normal_10000 <- run_simulation("normal", 10000)
+
+exp_100 <- run_simulation("exponential", 100)
+exp_1000 <- run_simulation("exponential", 1000)
+exp_10000 <- run_simulation("exponential", 10000)
+
+gamma_100 <- run_simulation("gamma", 100)
+gamma_1000 <- run_simulation("gamma", 1000)
+gamma_10000 <- run_simulation("gamma", 10000)
+
+# Compare simulated means to real mean
+mean(normal_100); mean(normal_1000); mean(normal_10000)
+mean(exp_100); mean(exp_1000); mean(exp_10000)
+mean(gamma_100); mean(gamma_1000); mean(gamma_10000)
+
+# Check variance of simulation means
+var(normal_100); var(normal_1000); var(normal_10000)
+var(exp_100); var(exp_1000); var(exp_10000)
+var(gamma_100); var(gamma_1000); var(gamma_10000)
+
+### Model Comparison
+
+# KS Tests for each distribution
+ks_normal <- ks.test(exam_clean, pnorm, mean = normal_mean, sd = normal_sd)
+ks_exponential <- ks.test(exam_clean, pexp, rate = exp_rate)
+ks_gamma <- ks.test(exam_clean, pgamma, shape = gamma_shape, scale = gamma_scale)
+
+ks_normal
+ks_exponential
+ks_gamma
+
+# Q-Q plots for each distribution
+par(mfrow = c(1,3))
+
+# Normal QQ plot
+qqnorm(exam_clean, main="Normal Q-Q Plot")
+qqline(exam_clean)
+
+# Exponential QQ plot
+exp_theoretical <- qexp(ppoints(n), rate = exp_rate)
+qqplot(exp_theoretical, exam_clean, main="Exponential Q-Q Plot")
+abline(0,1)
+
+# Gamma QQ plot
+gamma_theoretical <- qgamma(ppoints(n), shape = gamma_shape, scale = gamma_scale)
+qqplot(gamma_theoretical, exam_clean, main="Gamma Q-Q Plot")
+abline(0,1)
+
+par(mfrow = c(1,1)) # reset layout
+
+csv_dir <- dirname(csv_file_path) #Gets the directory of the original .csv file
+output_file_path <- file.path(csv_dir, "DataList.txt") #Sets the output location for cleaned data
