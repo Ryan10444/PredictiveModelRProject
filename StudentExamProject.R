@@ -384,3 +384,123 @@ cat("====================================================\n\n")
 
 sink() #Stops saving summary at this point
 cat("Analysis summary saved to:", output_file_path, "\n") #Tells the user where the data file has saved to.
+
+
+
+
+##=========================================================
+## Create correlation matrix
+##=========================================================
+
+library(gridExtra)
+
+# Select numeric columns
+num_vars <- data[, c("hours_studied",
+                     "sleep_hours",
+                     "attendance_percent",
+                     "previous_scores",
+                     "exam_score")]
+
+# Correlation matrix and rounding
+cor_matrix <- cor(num_vars)
+cor_table  <- round(cor_matrix, 3)
+
+# Save as a visual table (PNG) in your working directory
+png("CorrelationMatrixTable.png", width = 900, height = 700)
+gridExtra::grid.table(cor_table)   # draws a table with lines
+dev.off()
+
+## ==========================================================
+##  Boxplots & ANOVA: Exam Score vs Predictor Quartiles
+## ==========================================================
+
+# Predictor variables to analyze
+vars <- c("hours_studied",
+          "sleep_hours",
+          "attendance_percent",
+          "previous_scores")
+
+# List to store ANOVA results
+anova_results <- list()
+
+for (var in vars) {
+  # -----------------------------
+  # 1) Create 4 quartile groups
+  # -----------------------------
+  # Quartile cut points (0%, 25%, 50%, 75%, 100%)
+  qtiles <- quantile(data[[var]], probs = c(0, 0.25, 0.5, 0.75, 1),
+                     na.rm = TRUE)
+  
+  group_name <- paste0(var, "_quartile_group")
+  
+  data[[group_name]] <- cut(
+    data[[var]],
+    breaks = qtiles,
+    include.lowest = TRUE,
+    labels = c("Q1 (lowest 25%)",
+               "Q2 (25–50%)",
+               "Q3 (50–75%)",
+               "Q4 (top 25%)")
+  )
+  
+  # -----------------------------
+  # 2) Save boxplot as PNG
+  # -----------------------------
+  pretty_var   <- gsub("_", " ", var)  # "hours_studied" -> "hours studied"
+  png_filename <- paste0("Boxplot_exam_by_", var, "_quartiles.png")
+  
+  png(png_filename, width = 900, height = 700)
+  
+  boxplot(
+    as.formula(paste("exam_score ~", group_name)),
+    data = data,
+    main = paste("Exam Score by", pretty_var, "Quartiles"),
+    xlab = paste(pretty_var, "Quartile Group"),
+    ylab = "Exam Score"
+  )
+  
+  dev.off()  # close PNG device
+  
+  # -----------------------------
+  # 3) One-way ANOVA for quartile groups
+  # -----------------------------
+  
+  anova_results[[var]] <- summary(
+    aov(as.formula(paste("exam_score ~", group_name)), data = data)
+  )
+}
+
+## ==========================================================
+##  Scatterplots: Exam Score vs Each Predictor
+##  (WITH REGRESSION LINE, SAVED AS PNG)
+## ==========================================================
+for (var in vars) {
+  # Keep only rows with no missing values for this predictor + exam_score
+  temp <- data[, c(var, "exam_score")]
+  temp <- temp[complete.cases(temp), ]
+  
+  x <- temp[[var]]
+  y <- temp$exam_score
+  
+  # Fit simple regression: exam_score ~ this predictor
+  fit <- lm(y ~ x)
+  
+  # Nice label for axes/title
+  pretty_var   <- gsub("_", " ", var)  # "hours_studied" -> "hours studied"
+  png_filename <- paste0("Scatter_exam_vs_", var, "_regline.png")
+  
+  # Open PNG device
+  png(png_filename, width = 900, height = 700)
+  
+  # Scatterplot
+  plot(x, y,
+       main = paste("Exam Score vs", pretty_var),
+       xlab = pretty_var,
+       ylab = "Exam Score")
+  
+  # Add regression line
+  abline(fit, lwd = 2)
+  
+  # Close PNG device (actually writes the file)
+  dev.off()
+}
