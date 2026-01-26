@@ -278,3 +278,109 @@ par(mfrow = c(1,1)) # reset layout
 
 csv_dir <- dirname(csv_file_path) #Gets the directory of the original .csv file
 output_file_path <- file.path(csv_dir, "DataList.txt") #Sets the output location for cleaned data
+
+sink(output_file_path) #Begins saving summary at this point
+
+cat("\n====================================================\n")
+cat("            CLEANED DATA SUMMARY\n")
+cat("====================================================\n")
+cat("Sample Size (n):", n, "\n")
+cat("Sample Mean:", round(xbar, 4), "\n")
+cat("Sample Variance:", round(var, 4), "\n")
+cat("95% CI for Mean: [", round(ci_lower, 4), ",", round(ci_upper, 4), "]\n")
+
+cat("\nDetected Defective Values:", defective_data, "\n")
+cat("Detected Outliers:", outliers, "\n")
+
+
+cat("\n====================================================\n")
+cat("      METHOD OF MOMENTS (MM) PARAMETERS\n")
+cat("====================================================\n")
+cat("Normal Mean (MM):", round(normal_mean_mm, 4), "\n")
+cat("Normal SD (MM):", round(normal_sd_mm, 4), "\n\n")
+
+cat("Exponential Rate (MM):", round(exp_rate_mm, 6), "\n\n")
+
+cat("Gamma Shape (MM):", round(gamma_shape_mm, 4), "\n")
+cat("Gamma Scale (MM):", round(gamma_scale_mm, 4), "\n")
+
+
+cat("\n====================================================\n")
+cat("      MAXIMUM LIKELIHOOD ESTIMATION (MLE)\n")
+cat("====================================================\n")
+cat("Normal Mean (MLE):", round(normal_mean_mle, 4), "\n")
+cat("Normal SD (MLE):", round(normal_sd_mle, 4), "\n\n")
+
+cat("Exponential Rate (MLE):", round(exp_rate_mle, 6), "\n\n")
+
+cat("Gamma Shape (MLE):", round(gamma_shape_mle, 4), "\n")
+cat("Gamma Scale (MLE):", round(gamma_scale_mle, 4), "\n")
+
+
+cat("\n====================================================\n")
+cat("      STANDARD ERRORS & 95% CONFIDENCE INTERVALS\n")
+cat("====================================================\n")
+cat("Normal Mean SE:", round(se_normal_mean_mle, 5), "\n")
+cat("95% CI (Normal Mean): [", round(ci_normal_mean_lower, 4),
+    ", ", round(ci_normal_mean_upper, 4), "]\n\n")
+
+cat("95% CI (Normal SD): [", round(ci_normal_sd_lower, 4),
+    ", ", round(ci_normal_sd_upper, 4), "]\n\n")
+
+cat("Exponential Rate SE:", round(se_exp_rate_mle, 5), "\n")
+cat("95% CI (Exp Rate): [", round(ci_exp_rate_lower, 6),
+    ", ", round(ci_exp_rate_upper, 6), "]\n\n")
+
+cat("Gamma Shape SE:", round(se_gamma_shape, 5), "\n")
+cat("95% CI (Gamma Shape): [", round(ci_gamma_shape_lower, 4),
+    ", ", round(ci_gamma_shape_upper, 4), "]\n\n")
+
+cat("Gamma Scale SE:", round(se_gamma_scale, 5), "\n")
+cat("95% CI (Gamma Scale): [", round(ci_gamma_scale_lower, 4),
+    ", ", round(ci_gamma_scale_upper, 4), "]\n")
+
+
+cat("\n====================================================\n")
+cat("            MONTE CARLO SIMULATION SUMMARY\n")
+cat("====================================================\n")
+cat("Normal Sim Means:", "\n")
+cat("  100 reps:", round(mean(normal_100), 4),
+    " | Var:", round(var(normal_100), 6), "\n")
+cat("  1000 reps:", round(mean(normal_1000), 4),
+    " | Var:", round(var(normal_1000), 6), "\n")
+cat("  10000 reps:", round(mean(normal_10000), 4),
+    " | Var:", round(var(normal_10000), 6), "\n\n")
+
+cat("Exponential Sim Means:", "\n")
+cat("  100 reps:", round(mean(exp_100), 4),
+    " | Var:", round(var(exp_100), 6), "\n")
+cat("  1000 reps:", round(mean(exp_1000), 4),
+    " | Var:", round(var(exp_1000), 6), "\n")
+cat("  10000 reps:", round(mean(exp_10000), 4),
+    " | Var:", round(var(exp_10000), 6), "\n\n")
+
+cat("Gamma Sim Means:", "\n")
+cat("  100 reps:", round(mean(gamma_100), 4),
+    " | Var:", round(var(gamma_100), 6), "\n")
+cat("  1000 reps:", round(mean(gamma_1000), 4),
+    " | Var:", round(var(gamma_1000), 6), "\n")
+cat("  10000 reps:", round(mean(gamma_10000), 4),
+    " | Var:", round(var(gamma_10000), 6), "\n")
+
+
+cat("\n====================================================\n")
+cat("              KS TEST RESULTS\n")
+cat("====================================================\n")
+cat("Normal KS Statistic:", round(ks_normal$statistic, 4),
+    " | p-value:", ks_normal$p.value, "\n")
+cat("Exponential KS Statistic:", round(ks_exponential$statistic, 4),
+    " | p-value:", ks_exponential$p.value, "\n")
+cat("Gamma KS Statistic:", round(ks_gamma$statistic, 4),
+    " | p-value:", ks_gamma$p.value, "\n")
+
+cat("\n====================================================\n")
+cat("              END OF ANALYSIS OUTPUT\n")
+cat("====================================================\n\n")
+
+sink() #Stops saving summary at this point
+cat("Analysis summary saved to:", output_file_path, "\n") #Tells the user where the data file has saved to.
